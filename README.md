@@ -7,7 +7,7 @@ TaiwanGPT is a project focused on fine-tuning the GPT-4 mini model using a Tradi
 ## Project Structure
 
 - **data/**: Contains the Traditional Chinese corpus used for fine-tuning, and the TMLU benchmark dataset.
-- **scripts/**: Includes scripts for data preprocessing, model fine-tuning, and evaluation.
+- **src/**: Includes scripts for data preprocessing, model fine-tuning, and evaluation.
 - **models/**: Directory where trained models and checkpoints are saved.
 - **notebooks/**: Jupyter notebooks for exploratory data analysis, fine-tuning, and evaluation.
 - **results/**: Contains results, including performance metrics and analysis on the TMLU benchmark.
@@ -22,8 +22,7 @@ TaiwanGPT/
 │   │   └── prompts/                # Instruction prompts for fine-tuning
 │   │
 │   ├── eval/
-│   │   ├── TMLU_raw/               # Raw TMLU benchmark data
-│   │   └── TMLU_processed/         # Processed TMLU data formatted for evaluation
+│   │   └── miulab/                 # Raw TMLU benchmark data
 │   │
 │   └── README.md                   # Documentation for the data directory
 │
@@ -41,9 +40,7 @@ TaiwanGPT/
 │   ├── evaluation/                 # Performance results from TMLU benchmark
 │   └── analysis/                   # Detailed analysis and reports on model performance
 │
-├── scripts/
-│   ├── preprocess_data.py          # Script for preprocessing the Traditional Chinese corpus
-│   ├── generate_prompts.py         # Script for generating instructional prompts
+├── src/
 │   ├── train.py                    # Script for fine-tuning the GPT-4 mini model
 │   ├── evaluate.py                 # Script for running evaluations against the TMLU benchmark
 │   ├── api_client.py               
@@ -54,6 +51,8 @@ TaiwanGPT/
 │       ├── base_loader.py          # Contains the base DataLoader class
 │       ├── tmlu_loader.py          # TMLU-specific DataLoader subclass
 │       └── custom_loader.py        # (Optional) Another dataset-specific loader
+│   └── llm/                
+│       ├── __init__.py             # For initializing the data_loader module
 │
 ├── configs/
 │   ├── fine_tuning.yaml            # Configuration file for fine-tuning parameters

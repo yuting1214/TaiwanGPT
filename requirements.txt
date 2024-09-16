@@ -1,1 +1,3 @@
+tiktoken
 datasets
+openai<=1.43.0
