@@ -1,3 +1,9 @@
+python-dotenv
+openlimit
 tiktoken
 datasets
+sqlalchemy
+databases[aiosqlite]
+pydantic>=2.7.0
+pydantic-settings
 openai<=1.43.0

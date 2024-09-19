@@ -5,7 +5,7 @@ class TMLUDataLoader(DataLoader):
     def preprocess_dataset(self):
         """
         Preprocess the 'miulab/tmlu' dataset by downloading all subsets,
-        adding config names as columns, and concatenating them into a DatasetDict.
+        adding config names as columns, creating prompts, and concatenating them into a DatasetDict.
         
         Returns:
         - Concatenated DatasetDict with 'test' and 'dev' splits.
@@ -22,7 +22,10 @@ class TMLUDataLoader(DataLoader):
             
             # Add the config name as a new column to distinguish subsets
             for split in dataset:
+                # Add config name
                 dataset[split] = dataset[split].map(lambda example: {"subject": config})
+                # Create user prompts
+                dataset[split] = dataset[split].map(self.create_user_prompt)
                 datasets[split].append(dataset[split])
 
         # Concatenate the 'test' and 'dev' datasets separately
@@ -50,3 +53,30 @@ class TMLUDataLoader(DataLoader):
         - List of dataset configurations (subsets).
         """
         return get_dataset_config_names(self.dataset_name)
+    
+    def create_user_prompt(self, example):
+        # Template for the question
+        prompt_template_part_one = '''
+        以下選擇題為出自臺灣的考題，答案為其中一個選項。
+
+        問題:
+        {question}
+
+        '''
+        prompt_template_part_two = '''
+        正確答案：(
+        '''
+        # List of possible options (A to F)
+        options = ["A", "B", "C", "D", "E", "F"]
+        
+        # Check if each option exists in the example and construct answer string
+        answer_template = ' '.join([f"({option}) {example[option]}" for option in options if example.get(option)])
+        
+        # Fill the question in the prompt template
+        prompt = prompt_template_part_one.format(question=example["question"]) + answer_template + prompt_template_part_two
+        
+        # Add the final prompt to 'user_content'
+        example['user_content'] = prompt
+        
+        return example
+
