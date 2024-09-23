@@ -11,7 +11,7 @@ Base = declarative_base()
 # Evaluation Experiment Table
 class EvaluationExperiment(Base):
     __tablename__ = "evaluation_experiments"
-    experiment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     model_name = Column(String, nullable=False)
     prompt_name = Column(String, nullable=False)
     data_name = Column(String, nullable=False)
@@ -23,8 +23,8 @@ class EvaluationExperiment(Base):
 # Evaluation Metric Table
 class EvaluationMetric(Base):
     __tablename__ = "evaluation_metrics"
-    metric_id = Column(Integer, primary_key=True, autoincrement=True)
-    experiment_id = Column(UUID(as_uuid=True), ForeignKey("evaluation_experiments.experiment_id"))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    experiment_id = Column(UUID(as_uuid=True), ForeignKey("evaluation_experiments.id"))
     metric_name = Column(String, nullable=False)  # Name of the metric, e.g., "accuracy"
     metric_value = Column(Float, nullable=False)  # Value of the metric, e.g., 0.85
     created_at = Column(DateTime, nullable=False, default=func.now())
@@ -34,7 +34,7 @@ class EvaluationMetric(Base):
 # Fine-Tuning Experiment Table
 class FineTuningExperiment(Base):
     __tablename__ = "fine_tuning_experiments"
-    experiment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     model_name = Column(String, nullable=False)
     dataset_name = Column(String, nullable=False)  # Dataset used for fine-tuning
     num_epochs = Column(Integer, nullable=False)  # Number of training epochs
@@ -45,7 +45,7 @@ class FineTuningExperiment(Base):
     metrics = relationship("FineTuningMetric", back_populates="experiment")
 
     def __repr__(self):
-        return (f"<FineTuningExperiment(experiment_id='{self.experiment_id}', "
+        return (f"<FineTuningExperiment(experiment_id='{self.id}', "
                 f"model_name='{self.model_name}', dataset_name='{self.dataset_name}', "
                 f"num_epochs={self.num_epochs}, learning_rate={self.learning_rate}, "
                 f"tokens_used_million={self.tokens_used_million}, created_at={self.created_at})>")
@@ -53,8 +53,8 @@ class FineTuningExperiment(Base):
 # Fine-Tuning Metric Table
 class FineTuningMetric(Base):
     __tablename__ = "fine_tuning_metrics"
-    metric_id = Column(Integer, primary_key=True, autoincrement=True)
-    experiment_id = Column(UUID(as_uuid=True), ForeignKey("fine_tuning_experiments.experiment_id"))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    experiment_id = Column(UUID(as_uuid=True), ForeignKey("fine_tuning_experiments.id"))
     metric_name = Column(String, nullable=False)  # Name of the metric, e.g., "training_loss"
     metric_value = Column(Float, nullable=False)  # Value of the metric, e.g., 0.02 for loss
     created_at = Column(DateTime, nullable=False, default=func.now())
@@ -63,8 +63,8 @@ class FineTuningMetric(Base):
 
 class LLMResponse(Base):
     __tablename__ = "llm_responses"
-    response_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    experiment_id = Column(UUID(as_uuid=True), ForeignKey("evaluation_experiments.experiment_id"))
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    experiment_id = Column(UUID(as_uuid=True), ForeignKey("evaluation_experiments.id"))
     input_id = Column(String, nullable=False)
     model_response = Column(Text, nullable=False)
     # Relationships
